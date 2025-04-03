@@ -9,7 +9,6 @@ from langchain_community.callbacks import StreamlitCallbackHandler
 # models
 from langchain_openai import ChatOpenAI
 
-
 # custom tools
 from tools.search_ddg import search_ddg
 from tools.fetch_page import fetch_page
@@ -84,7 +83,7 @@ def init_messages():
 
 
 def select_model():
-    models = ("GPT-4",  "GPT-3.5 (not recommended)")
+    models = ("GPT-4", "Claude 3.5 Sonnet", "Gemini 1.5 Pro", "GPT-3.5 (not recommended)")
     model = st.sidebar.radio("Choose a model:", models)
     if model == "GPT-3.5 (not recommended)":
         return ChatOpenAI(
@@ -92,7 +91,7 @@ def select_model():
     elif model == "GPT-4":
         return ChatOpenAI(
             temperature=0, model_name="gpt-4o")
- 
+    
 
 
 def create_agent():
