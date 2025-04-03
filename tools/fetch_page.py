@@ -7,25 +7,10 @@ from langchain_core.tools import tool
 from langchain_core.pydantic_v1 import (BaseModel, Field)
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-from pydantic import validator  # 追加
 
 class FetchPageInput(BaseModel):
-    url: str = Field(..., description="取得するページのURL")
-    page_num: int = Field(
-        default=0,
-        ge=0,
-        description="ページ番号（0から開始）",
-        json_schema_extra={"example": 0}
-    )
-    
-    @validator('page_num')
-    def validate_page_num(cls, v):
-        if v < 0:
-            raise ValueError("page_numは0以上である必要があります")
-        return v
-# class FetchPageInput(BaseModel):
-#     url: str = Field()
-#     page_num: int = Field(0, ge=0)
+    url: str = Field()
+    page_num: int = Field(0, ge=0)
 
 
 @tool(args_schema=FetchPageInput)
