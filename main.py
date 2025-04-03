@@ -83,7 +83,7 @@ def init_messages():
 
 
 def select_model():
-    models = ("GPT-4", "Claude 3.5 Sonnet", "Gemini 1.5 Pro", "GPT-3.5 (not recommended)")
+    models = ("GPT-4", "GPT-3.5 (not recommended)")
     model = st.sidebar.radio("Choose a model:", models)
     if model == "GPT-3.5 (not recommended)":
         return ChatOpenAI(
