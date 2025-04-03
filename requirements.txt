@@ -11,4 +11,4 @@ duckduckgo_search==2025.4.1
 html2text==2024.2.26
 readability-lxml==0.8.1
 lxml_html_clean==0.4.1
-pydantic==1.10.13
+pydantic==2.11.1
