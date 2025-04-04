@@ -110,7 +110,7 @@ def main():
 
             response = web_browsing_agent.invoke(
                 {'input': prompt},
-                config=RunnableConfig({'callbacks': [st_cb]}
+                config=RunnableConfig({'callbacks': [st_cb]})
             )
             st.write(response["output"])
 
