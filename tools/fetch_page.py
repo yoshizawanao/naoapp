@@ -10,7 +10,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 class FetchPageInput(BaseModel):
     url: str = Field()
-    page_num: int = Field(0, ge=0)
+    page_num: int = Field(0)
 
 
 @tool(args_schema=FetchPageInput)
