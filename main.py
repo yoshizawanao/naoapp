@@ -56,6 +56,9 @@ def init_messages():
     clear_button = st.sidebar.button("Clear DB", key="clear")
 
     if clear_button or "messages" not in st.session_state:
+        st.session_state.messages = [
+            {"role": "assistant", "content": "こんにちは！なんでも質問をどうぞ！"}
+        ]
 
         st.session_state['memory'] = ConversationBufferWindowMemory(
             return_messages=True,
@@ -97,6 +100,8 @@ def create_agent():
     )
 
 def main():
+    init_page()
+    init_messages()
     web_browsing_agent = create_agent()
 
     for msg in st.session_state['memory'].chat_memory.messages:
