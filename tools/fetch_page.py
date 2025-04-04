@@ -14,7 +14,7 @@ class FetchPageInput(BaseModel):
 
 
 @tool(args_schema=FetchPageInput)
-def fetch_page(url, page_num=0, timeout_sec=10):
+def fetch_page(url, page_num=0, timeout_sec=30):
     """
     指定されたURLから（とページ番号から）ウェブページのコンテンツを取得するツール。
 

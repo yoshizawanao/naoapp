@@ -41,7 +41,7 @@ def search_ddg(query, max_result_num=5):
     - snippet
     - url
     """
-    res = DDGS().text(query, region='wt-wt', safesearch='off', backend="lite")
+    res = DDGS().text(query, region='wt-wt', safesearch='off', backend="api")
     return [
         {
             "title": r.get('title', ""),
