@@ -59,7 +59,7 @@ def init_messages():
 
         st.session_state['memory'] = ConversationBufferWindowMemory(
             return_messages=True,
-            memory_key="chat_history"
+            memory_key="chat_history",
             k=10
         )
 
