@@ -7,7 +7,7 @@ class SearchDDGInput(BaseModel):
     query: str = Field(description="検索したいキーワードを入力してください")
 
 @tool(args_schema=SearchDDGInput)
-def serch_ddg(query, max_result_num=5):
+def search_ddg(query, max_result_num=5):
     """
     DuckDuckGo検索を実行するためのツールです。
     検索したいキーワードを入力して使用してください。
