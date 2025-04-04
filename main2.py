@@ -1,3 +1,4 @@
+# GitHub: https://github.com/naotaka1128/llm_app_codes/chapter_009/main.py
 import streamlit as st
 from langchain.agents import create_tool_calling_agent, AgentExecutor
 from langchain.memory import ConversationBufferWindowMemory
@@ -5,11 +6,22 @@ from langchain_core.prompts import MessagesPlaceholder, ChatPromptTemplate
 from langchain_core.runnables import RunnableConfig
 from langchain_community.callbacks import StreamlitCallbackHandler
 
+# models
 from langchain_openai import ChatOpenAI
 
+
+# custom tools
 from tools.search_ddg import search_ddg
 from tools.fetch_page import fetch_page
 
+###### dotenv を利用しない場合は消してください ######
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    import warnings
+    warnings.warn("dotenv not found. Please make sure to set your environment variables manually.", ImportWarning)
+################################################
 
 CUSTOM_SYSTEM_PROMPT = """
 あなたは、ユーザーのリクエストに基づいてインターネットで調べ物を行うアシスタントです。
@@ -43,41 +55,45 @@ CUSTOM_SYSTEM_PROMPT = """
 ユーザーが日本語で質問した場合は、日本語で回答してください。ユーザーがスペイン語で質問した場合は、スペイン語で回答してください。
 """
 
+
 def init_page():
     st.set_page_config(
         page_title="Web Browsing Agent",
-        page_icon="📄"
+        page_icon="🤗"
     )
-    st.header("Web Browsing Agent")
+    st.header("Web Browsing Agent 🤗")
     st.sidebar.title("Options")
 
 
 def init_messages():
-    clear_button = st.sidebar.button("Clear DB", key="clear")
-
+    clear_button = st.sidebar.button("Clear Conversation", key="clear")
     if clear_button or "messages" not in st.session_state:
-
+        st.session_state.messages = [
+            {"role": "assistant", "content": "こんにちは！なんでも質問をどうぞ！"}
+        ]
         st.session_state['memory'] = ConversationBufferWindowMemory(
             return_messages=True,
-            memory_key="chat_history"
+            memory_key="chat_history",
             k=10
         )
 
+        # このようにも書ける
+        # from langchain_community.chat_message_histories import StreamlitChatMessageHistory
+        # msgs = StreamlitChatMessageHistory(key="special_app_key")
+        # st.session_state['memory'] = ConversationBufferMemory(memory_key="history", chat_memory=msgs)
 
-def select_model(temperature=0):
-    models = ("GPT-3.5", "GPT-4")
-    model = st.sidebar.radio("Choose a model", models)
-    if model == "GPT-3.5":
+
+def select_model():
+    models = ("GPT-4", "GPT-3.5 (not recommended)")
+    model = st.sidebar.radio("Choose a model:", models)
+    if model == "GPT-3.5 (not recommended)":
         return ChatOpenAI(
-            temperature=temperature,
-            model_name="gpt-3.5-turbo"
-        )
+            temperature=0, model_name="gpt-3.5-turbo")
     elif model == "GPT-4":
         return ChatOpenAI(
-            temperature=temperature,
-            model_name="gpt-4o"
-        )
+            temperature=0, model_name="gpt-4o")
     
+
 def create_agent():
     tools = [search_ddg, fetch_page]
     prompt = ChatPromptTemplate.from_messages([
@@ -88,7 +104,6 @@ def create_agent():
     ])
     llm = select_model()
     agent = create_tool_calling_agent(llm, tools, prompt)
-
     return AgentExecutor(
         agent=agent,
         tools=tools,
@@ -96,23 +111,30 @@ def create_agent():
         memory=st.session_state['memory']
     )
 
+
 def main():
+    init_page()
+    init_messages()
     web_browsing_agent = create_agent()
 
     for msg in st.session_state['memory'].chat_memory.messages:
         st.chat_message(msg.type).write(msg.content)
 
-    if prompt := st.chat_input(placeholder="日本の人口は？"):
+    if prompt := st.chat_input(placeholder="2023 FIFA 女子ワールドカップの優勝国は？"):
         st.chat_message("user").write(prompt)
 
         with st.chat_message("assistant"):
-            st_cb = StreamlitCallbackHandler(st.container(), expand_new_thoughts=True)
+            # コールバック関数の設定 (エージェントの動作の可視化用)
+            st_cb = StreamlitCallbackHandler(
+                st.container(), expand_new_thoughts=True)
 
+            # エージェントを実行
             response = web_browsing_agent.invoke(
                 {'input': prompt},
-                config=RunnableConfig({'callbacks': [st_cb]}
+                config=RunnableConfig({'callbacks': [st_cb]})
             )
             st.write(response["output"])
+
 
 if __name__ == '__main__':
     main()
