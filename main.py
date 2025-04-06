@@ -12,7 +12,17 @@ from tools.fetch_page import fetch_page
 
 
 CUSTOM_SYSTEM_PROMPT = """
-あなたは、ユーザーのリクエストに基づいてインターネットで調べ物を行うアシスタントです。
+あなたは、読み込んだ資料と、その資料内のユーザーが指摘した部分に基づいて、その指摘部分の情報の正誤判断や、
+指摘部分についてインターネット検索を用いながら追加すべき情報を提供してくれるアシスタントです。
+読み込んだ資料とユーザーの指摘部分は以下のものに基づいてください。
+===
+前提知識
+{context}
+
+===
+ユーザーからの質問
+{question}
+
 利用可能なツールを使用して、調査した情報を説明してください。
 既に知っていることだけに基づいて答えないでください。回答する前にできる限り検索を行ってください。
 (ユーザーが読むページを指定するなど、特別な場合は、検索する必要はありません。)
@@ -57,7 +67,7 @@ def init_messages():
 
     if clear_button or "messages" not in st.session_state:
         st.session_state.messages = [
-            {"role": "assistant", "content": "こんにちは！なんでも質問をどうぞ！"}
+            {"role": "assistant", "content": "資料についての質問や確認したい点があればどうぞ！"}
         ]
 
         st.session_state['memory'] = ConversationBufferWindowMemory(
@@ -80,13 +90,15 @@ def select_model(temperature=0):
             temperature=temperature,
             model_name="gpt-4o"
         )
-    
+
+
+
 def create_agent():
     tools = [search_ddg, fetch_page]
     prompt = ChatPromptTemplate.from_messages([
         ("system", CUSTOM_SYSTEM_PROMPT),
         MessagesPlaceholder(variable_name="chat_history"),
-        ("user", "{input}"),
+        ("user", "{question}"),
         MessagesPlaceholder(variable_name="agent_scratchpad")
     ])
     llm = select_model()
@@ -102,6 +114,9 @@ def create_agent():
 def main():
     init_page()
     init_messages()
+    if "vectorstore" not in st.session_state:
+        st.warning("まずはUpload PDFからPDFをアップロードしてね")
+
     web_browsing_agent = create_agent()
 
     for msg in st.session_state['memory'].chat_memory.messages:
@@ -112,9 +127,13 @@ def main():
 
         with st.chat_message("assistant"):
             st_cb = StreamlitCallbackHandler(st.container(), expand_new_thoughts=True)
+            retriever = st.session_state.vectorstore.as_retriever(
+        search_type="similarity"
+        search_keywards={"k":10}
+    )
 
             response = web_browsing_agent.invoke(
-                {'input': prompt},
+                {'question': prompt, 'context': retriever},
                 config=RunnableConfig({'callbacks': [st_cb]})
             )
             st.write(response["output"])
