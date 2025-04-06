@@ -128,7 +128,7 @@ def main():
         with st.chat_message("assistant"):
             st_cb = StreamlitCallbackHandler(st.container(), expand_new_thoughts=True)
             retriever = st.session_state.vectorstore.as_retriever(
-        search_type="similarity"
+        search_type="similarity",
         search_keywards={"k":10}
     )
 
