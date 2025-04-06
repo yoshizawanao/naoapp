@@ -6,7 +6,7 @@ from langchain_openai import OpenAIEmbeddings
 
 def init_page():
     st.set_page_config(
-        page_title="Upload PDF"
+        page_title="Upload PDF",
         page_icon="😢"
     )
     st.sidebar.title("Options")
