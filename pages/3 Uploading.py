@@ -61,7 +61,7 @@ def main():
     init_page()
     # page_pdf_upload_and_build_vector_db()
     answer=get_pdf_text()
-    st.write(answer["output"])
+    st.write(answer)
 
 if __name__ == '__main__':
     main()
