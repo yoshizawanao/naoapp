@@ -60,7 +60,8 @@ def get_pdf_text():
 def main():
     init_page()
     # page_pdf_upload_and_build_vector_db()
-    get_pdf_text()
+    answer=get_pdf_text()
+    st.write(answer["output"])
 
 if __name__ == '__main__':
     main()
