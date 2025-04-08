@@ -78,8 +78,8 @@ def get_pdf_text():
 
 def init_qa_chain():
     llm = ChatOpenAI(
-        temperature=0,
-#       model_name="gpt-4o"
+      temperature=0,
+      model_name="gpt-4o"
     )
     prompt = ChatPromptTemplate.from_template("""
     # 以下の前提知識を用いて、ユーザーからの質問に答えてください。
@@ -113,7 +113,7 @@ def init_qa_chain():
     return chain
 
 def page_ask_my_pdf():
-    select_model()
+    # select_model()
     chain = init_qa_chain()
     # if query := st.text_input("PDFへの質問を書いてね： ", key="input"):
         # st.markdown("## Answer")
