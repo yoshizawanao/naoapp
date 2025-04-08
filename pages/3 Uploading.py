@@ -39,6 +39,8 @@ def get_pdf_text():
         return pdf_text
     else:
         return None
+
+answer = get_pdf_text()
     
 # def build_vector_store(pdf_text):
 #     with st.spinner("Saiving to vector store..."):
@@ -51,7 +53,7 @@ def get_pdf_text():
 #             )
 
 def build_vector_store(pdf_text):
-    answer = get_pdf_text()
+    # answer = get_pdf_text()
     with st.spinner("Saiving to vector store..."):
         if 'textstore' in st.session_state:
             st.session_state.textstore.add_texts(pdf_text)
@@ -75,7 +77,7 @@ def page_pdf_upload_and_build_vector_db():
 def main():
     init_page()
     page_pdf_upload_and_build_vector_db()
-    answer=get_pdf_text()
+    
     st.write(answer)
 
 if __name__ == '__main__':
