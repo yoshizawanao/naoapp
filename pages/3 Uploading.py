@@ -50,6 +50,14 @@ def get_pdf_text():
 #                 OpenAIEmbeddings(model="text-embedding-3-small")
 #             )
 
+def build_vector_store(pdf_text):
+    answer = get_pdf_text()
+    with st.spinner("Saiving to vector store..."):
+        if 'textstore' in st.session_state:
+            st.session_state.textstore.add_texts(pdf_text)
+        else:
+            st.session_state.textorstore = pdf_text
+
 
 # def page_pdf_upload_and_build_vector_db():
 #     st.title("PDF Upload")
@@ -57,9 +65,16 @@ def get_pdf_text():
 #     if pdf_text:
 #         build_vector_store(pdf_text)
 
+def page_pdf_upload_and_build_vector_db():
+    st.title("PDF Upload")
+    pdf_text = get_pdf_text()
+    if pdf_text:
+        build_vector_store(pdf_text)
+
+
 def main():
     init_page()
-    # page_pdf_upload_and_build_vector_db()
+    page_pdf_upload_and_build_vector_db()
     answer=get_pdf_text()
     st.write(answer)
 

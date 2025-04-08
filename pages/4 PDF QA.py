@@ -29,7 +29,9 @@ def select_model(temperature=0):
 def init_qa_chain():
     llm = select_model()
     prompt = ChatPromptTemplate.from_template("""
-    以下の前提知識を用いて、ユーザーからの質問に答えてください。
+    # 以下の前提知識を用いて、ユーザーからの質問に答えてください。
+    以下の前提知識の正誤判定をしてください。
+                                            
 
     ===
     前提知識
@@ -40,12 +42,15 @@ def init_qa_chain():
     {question}
     """
     )
-    retriever = st.session_state.vectorstore.as_retriever(
-        search_type="similarity"
-        search_keywards={"k":10}
-    )
+    # retriever = st.session_state.vectorstore.as_retriever(
+    #     search_type="similarity"
+    #     search_keywards={"k":10}
+    # )
+    
+    text = st.session_state.textstore
+
     chain = (
-        {"context": retriever, "question": RunnablePassthrough()}
+        {"context": text, "question": RunnablePassthrough()}
         | prompt
         | llm
         |StrOutputParser()
@@ -62,7 +67,7 @@ def page_ask_my_pdf():
 def main():
     init_page()
     st.title("PDF QA")
-    if "vectorstore" not in st.session_state:
+    if "textstore" not in st.session_state:
         st.warning("まずはUpload PDFからPDFをアップロードしてね")
     else:
         page_ask_my_pdf()
