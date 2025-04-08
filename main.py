@@ -12,8 +12,8 @@ from tools.fetch_page import fetch_page
 
 
 CUSTOM_SYSTEM_PROMPT = """
-あなたは、読み込んだ資料と、その資料内のユーザーが指摘した部分に基づいて、その指摘部分の情報の正誤判断や、
-指摘部分についてインターネット検索を用いながら追加すべき情報を提供してくれるアシスタントです。
+あなたは、読み込んだ資料と、その資料内のユーザーが指摘した部分に基づいて、その指摘部分についてインターネットで調べ
+情報の正誤判断や、追加すべき情報を提案してくれるアシスタントです。
 読み込んだ資料とユーザーの指摘部分は以下のものに基づいてください。
 ===
 前提知識
@@ -127,13 +127,13 @@ def main():
 
         with st.chat_message("assistant"):
             st_cb = StreamlitCallbackHandler(st.container(), expand_new_thoughts=True)
-            retriever = st.session_state.vectorstore.as_retriever(
-        search_type="similarity",
-        search_keywards={"k":10}
-    )
+    #         retriever = st.session_state.vectorstore.as_retriever(
+    #     search_type="similarity",
+    #     search_keywards={"k":10}
+    # )
 
             response = web_browsing_agent.invoke(
-                {'question': prompt, 'context': retriever},
+                {'question': prompt},
                 config=RunnableConfig({'callbacks': [st_cb]})
             )
             st.write(response["output"])
