@@ -16,19 +16,19 @@ def init_page():
     )
     st.sidebar.title("Options")
 
-def select_model(temperature=0):
-    models = ("GPT-3.5", "GPT-4")
-    model = st.sidebar.radio("Choose a model", models, key="model_selector")
-    if model == "GPT-3.5":
-        return ChatOpenAI(
-            temperature=temperature,
-            model_name="gpt-3.5-turbo"
-        )
-    elif model == "GPT-4":
-        return ChatOpenAI(
-            temperature=temperature,
-            model_name="gpt-4o"
-        )
+# def select_model(temperature=0):
+#     models = ("GPT-3.5", "GPT-4")
+#     model = st.sidebar.radio("Choose a model", models)
+#     if model == "GPT-3.5":
+#         return ChatOpenAI(
+#             temperature=temperature,
+#             model_name="gpt-3.5-turbo"
+#         )
+#     elif model == "GPT-4":
+#         return ChatOpenAI(
+#             temperature=temperature,
+#             model_name="gpt-4o"
+#         )
 
 # def init_messages():
 #     clear_button = st.sidebar.button("Clear DB", key="clear")
@@ -77,7 +77,10 @@ def get_pdf_text():
 #         build_vector_store(pdf_text)
 
 def init_qa_chain():
-    llm = select_model()
+    llm = ChatOpenAI(
+        temperature=0,
+#       model_name="gpt-4o"
+    )
     prompt = ChatPromptTemplate.from_template("""
     # 以下の前提知識を用いて、ユーザーからの質問に答えてください。
     以下の前提知識の正誤判定をしてください。
