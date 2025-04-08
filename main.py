@@ -21,7 +21,7 @@ CUSTOM_SYSTEM_PROMPT = """
 
 ===
 ユーザーからの質問
-{question}
+{input}
 
 利用可能なツールを使用して、調査した情報を説明してください。
 既に知っていることだけに基づいて答えないでください。回答する前にできる限り検索を行ってください。
@@ -98,7 +98,7 @@ def create_agent():
     prompt = ChatPromptTemplate.from_messages([
         ("system", CUSTOM_SYSTEM_PROMPT),
         MessagesPlaceholder(variable_name="chat_history"),
-        ("user", "{question}"),
+        ("user", "{input}"),
         MessagesPlaceholder(variable_name="agent_scratchpad")
     ])
     llm = select_model()
@@ -133,7 +133,7 @@ def main():
     # )
 
             response = web_browsing_agent.invoke(
-                {'question': prompt},
+                {'input': prompt},
                 config=RunnableConfig({'callbacks': [st_cb]})
             )
             st.write(response["output"])
