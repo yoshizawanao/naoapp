@@ -30,10 +30,10 @@ def select_model(temperature=0):
             model_name="gpt-4o"
         )
 
-def init_messages():
-    clear_button = st.sidebar.button("Clear DB", key="clear")
-    if clear_button and "vectorstore" in st.session_state:
-        del st.session_state.vectorstores
+# def init_messages():
+#     clear_button = st.sidebar.button("Clear DB", key="clear")
+#     if clear_button and "vectorstore" in st.session_state:
+#         del st.session_state.vectorstores
 
 def get_pdf_text():
     pdf_file=st.file_uploader(
