@@ -58,7 +58,9 @@ def get_pdf_text():
         return pdf_text
     else:
         return None
-    
+
+answer=get_pdf_text()
+
 # def build_vector_store(pdf_text):
 #     with st.spinner("Saiving to vector store..."):
 #         if 'vectorstore' in st.session_state:
@@ -100,10 +102,10 @@ def init_qa_chain():
     #     search_keywards={"k":10}
     # )
     
-    text = get_pdf_text()
+    # text = get_pdf_text()
 
     chain = (
-        {"context": text
+        {"context": answer
         #  , "question": RunnablePassthrough()
          }
         | prompt
@@ -125,7 +127,7 @@ def page_ask_my_pdf():
 def main():
     init_page()
     # page_pdf_upload_and_build_vector_db()
-    answer=get_pdf_text()
+    
     st.write(answer)
     text = page_ask_my_pdf()
     st.write(text)
