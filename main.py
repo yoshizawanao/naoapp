@@ -11,6 +11,46 @@ from tools.search_ddg import search_ddg
 from tools.fetch_page import fetch_page
 
 
+
+def init_page():
+    st.set_page_config(
+        page_title="Web Browsing Agent",
+        page_icon="📄"
+    )
+    st.header("Web Browsing Agent")
+    st.sidebar.title("Options")
+
+
+def init_messages():
+    clear_button = st.sidebar.button("Clear DB", key="clear")
+
+    if clear_button or "messages" not in st.session_state:
+        st.session_state.messages = [
+            {"role": "assistant", "content": "資料についての質問や確認したい点があればどうぞ！"}
+        ]
+
+        st.session_state['memory'] = ConversationBufferWindowMemory(
+            return_messages=True,
+            memory_key="chat_history",
+            k=10
+        )
+
+
+def select_model(temperature=0):
+    models = ("GPT-3.5", "GPT-4")
+    model = st.sidebar.radio("Choose a model", models)
+    if model == "GPT-3.5":
+        return ChatOpenAI(
+            temperature=temperature,
+            model_name="gpt-3.5-turbo"
+        )
+    elif model == "GPT-4":
+        return ChatOpenAI(
+            temperature=temperature,
+            model_name="gpt-4o"
+        )
+    
+    
 CUSTOM_SYSTEM_PROMPT = """
 あなたは、読み込んだ資料と、その資料内のユーザーが指摘した部分に基づいて、その指摘部分についてインターネットで調べ
 情報の正誤判断や、追加すべき情報を提案してくれるアシスタントです。
@@ -53,43 +93,7 @@ CUSTOM_SYSTEM_PROMPT = """
 ユーザーが日本語で質問した場合は、日本語で回答してください。ユーザーがスペイン語で質問した場合は、スペイン語で回答してください。
 """
 
-def init_page():
-    st.set_page_config(
-        page_title="Web Browsing Agent",
-        page_icon="📄"
-    )
-    st.header("Web Browsing Agent")
-    st.sidebar.title("Options")
 
-
-def init_messages():
-    clear_button = st.sidebar.button("Clear DB", key="clear")
-
-    if clear_button or "messages" not in st.session_state:
-        st.session_state.messages = [
-            {"role": "assistant", "content": "資料についての質問や確認したい点があればどうぞ！"}
-        ]
-
-        st.session_state['memory'] = ConversationBufferWindowMemory(
-            return_messages=True,
-            memory_key="chat_history",
-            k=10
-        )
-
-
-def select_model(temperature=0):
-    models = ("GPT-3.5", "GPT-4")
-    model = st.sidebar.radio("Choose a model", models)
-    if model == "GPT-3.5":
-        return ChatOpenAI(
-            temperature=temperature,
-            model_name="gpt-3.5-turbo"
-        )
-    elif model == "GPT-4":
-        return ChatOpenAI(
-            temperature=temperature,
-            model_name="gpt-4o"
-        )
 
 
 

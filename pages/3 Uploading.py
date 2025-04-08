@@ -30,35 +30,37 @@ def get_pdf_text():
             for page in pdf_doc:
                 pdf_text += page.get_text()
 
-        text_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
-            model_name="text-embedding-3-small",
-            chunk_size=500,
-            chunk_overlap=0,
-        )
-        return text_splitter.split_text(pdf_text)
+        # text_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
+        #     model_name="text-embedding-3-small",
+        #     chunk_size=500,
+        #     chunk_overlap=0,
+        # )
+        # return text_splitter.split_text(pdf_text)
+        return pdf_text
     else:
         return None
     
-def build_vector_store(pdf_text):
-    with st.spinner("Saiving to vector store..."):
-        if 'vectorstore' in st.session_state:
-            st.session_state.vectorstore.add_texts(pdf_text)
-        else:
-            st.session_state.vectorstore = FAISS.from_texts(
-                pdf_text,
-                OpenAIEmbeddings(model="text-embedding-3-small")
-            )
+# def build_vector_store(pdf_text):
+#     with st.spinner("Saiving to vector store..."):
+#         if 'vectorstore' in st.session_state:
+#             st.session_state.vectorstore.add_texts(pdf_text)
+#         else:
+#             st.session_state.vectorstore = FAISS.from_texts(
+#                 pdf_text,
+#                 OpenAIEmbeddings(model="text-embedding-3-small")
+#             )
 
 
-def page_pdf_upload_and_build_vector_db():
-    st.title("PDF Upload")
-    pdf_text = get_pdf_text()
-    if pdf_text:
-        build_vector_store(pdf_text)
+# def page_pdf_upload_and_build_vector_db():
+#     st.title("PDF Upload")
+#     pdf_text = get_pdf_text()
+#     if pdf_text:
+#         build_vector_store(pdf_text)
 
 def main():
     init_page()
-    page_pdf_upload_and_build_vector_db()
+    # page_pdf_upload_and_build_vector_db()
+    get_pdf_text()
 
 if __name__ == '__main__':
     main()

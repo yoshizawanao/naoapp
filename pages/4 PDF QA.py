@@ -7,7 +7,7 @@ from langchain_openai import ChatOpenAI
 
 def init_page():
     st.set_page_config(
-        page_title="Ask My PDF"
+        page_title="Ask My PDF",
         page_icon="🥺"
     )
     st.sidebar.title("Options")
